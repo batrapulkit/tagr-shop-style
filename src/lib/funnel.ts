@@ -51,7 +51,7 @@ export async function logFunnel(
       session_id: getSessionId(),
       phone: getStoredPhone(),
       step,
-      meta: meta ?? null,
+      meta: (meta ?? null) as never,
     });
   } catch (err) {
     console.error("funnel log failed", step, err);
