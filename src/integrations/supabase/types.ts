@@ -14,7 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      creators: {
+        Row: {
+          consent_given: boolean
+          created_at: string
+          follower_count: number | null
+          id: string
+          instagram_handle: string | null
+          phone: string
+        }
+        Insert: {
+          consent_given?: boolean
+          created_at?: string
+          follower_count?: number | null
+          id?: string
+          instagram_handle?: string | null
+          phone: string
+        }
+        Update: {
+          consent_given?: boolean
+          created_at?: string
+          follower_count?: number | null
+          id?: string
+          instagram_handle?: string | null
+          phone?: string
+        }
+        Relationships: []
+      }
+      funnel_events: {
+        Row: {
+          created_at: string
+          id: string
+          meta: Json | null
+          phone: string | null
+          session_id: string | null
+          step: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          phone?: string | null
+          session_id?: string | null
+          step: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          meta?: Json | null
+          phone?: string | null
+          session_id?: string | null
+          step?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount_paise: number | null
+          created_at: string
+          creator_id: string | null
+          id: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
+          status: string
+        }
+        Insert: {
+          amount_paise?: number | null
+          created_at?: string
+          creator_id?: string | null
+          id?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          status?: string
+        }
+        Update: {
+          amount_paise?: number | null
+          created_at?: string
+          creator_id?: string | null
+          id?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creators"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
