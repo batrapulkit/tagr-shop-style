@@ -45,10 +45,17 @@ export function setCreatorId(id: string) {
   window.localStorage.setItem(CREATOR_KEY, id);
 }
 
+const firedSteps = new Set<string>();
+
 export async function logFunnel(
   step: FunnelStep,
   meta?: Record<string, unknown>,
 ): Promise<void> {
+  if (firedSteps.has(step)) {
+    return;
+  }
+  firedSteps.add(step);
+
   if (typeof window !== "undefined") {
     const currentPhone = (meta?.["phone"] as string | undefined) || getStoredPhone() || "";
 
