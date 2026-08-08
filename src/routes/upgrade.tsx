@@ -134,7 +134,18 @@ function UpgradePage() {
             });
 
             if (verification.success) {
-              void logFunnel("payment_success");
+              await logFunnel("payment_success");
+              // Fallback direct calls to Meta Pixel to guarantee transmission
+              if (typeof window !== "undefined" && (window as any).fbq) {
+                try {
+                  (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
+                  (window as any).fbq("trackCustom", "paymentSuccess");
+                  (window as any).fbq("trackCustom", "PaymentCompleted", { value: 99.00, currency: "INR" });
+                  (window as any).fbq("trackCustom", "paymentCompleted", { value: 99.00, currency: "INR" });
+                } catch (pxErr) {
+                  console.error("Direct fallback pixel track failed:", pxErr);
+                }
+              }
               toast.success("Payment succeeded! Welcome to Pro.");
               void navigate({ to: "/welcome" });
             } else {

@@ -15,7 +15,21 @@ export const Route = createFileRoute("/welcome")({
 
 function WelcomePage() {
   useEffect(() => {
-    void logFunnel("payment_success");
+    async function trackSuccess() {
+      await logFunnel("payment_success");
+      // Direct absolute fallback calls to verify the events are loaded on welcome page mount
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        try {
+          (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
+          (window as any).fbq("trackCustom", "paymentSuccess");
+          (window as any).fbq("trackCustom", "PaymentCompleted", { value: 99.00, currency: "INR" });
+          (window as any).fbq("trackCustom", "paymentCompleted", { value: 99.00, currency: "INR" });
+        } catch (pxErr) {
+          console.error("Direct welcome fallback pixel track failed:", pxErr);
+        }
+      }
+    }
+    void trackSuccess();
   }, []);
 
   return (
