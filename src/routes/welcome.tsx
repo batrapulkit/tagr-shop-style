@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2 } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
@@ -12,6 +13,16 @@ export const Route = createFileRoute("/welcome")({
 });
 
 function WelcomePage() {
+  useEffect(() => {
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      try {
+        (window as any).fbq("track", "Purchase", { value: 9.00, currency: "INR" });
+      } catch (e) {
+        console.warn("Meta Pixel Purchase tracking failed:", e);
+      }
+    }
+  }, []);
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-5 py-10 text-center">
       <div className="flex items-center gap-2">
