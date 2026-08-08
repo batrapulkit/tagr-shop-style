@@ -72,6 +72,14 @@ function SignupPage() {
     }
   }
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+    setPhone(val);
+    if (val.length === 10) {
+      e.target.blur();
+    }
+  };
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-6">
       <p className="text-center font-display text-sm font-bold tracking-[-0.02em]">TagLoop</p>
@@ -105,7 +113,7 @@ function SignupPage() {
             maxLength={10}
             placeholder="98765 43210"
             value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+            onChange={handlePhoneChange}
             className="metric w-full bg-transparent px-3 py-3.5 text-base outline-none placeholder:text-muted-foreground"
           />
         </div>

@@ -188,7 +188,7 @@ function UpgradePage() {
   const isTestMode = keyId.startsWith("rzp_test_");
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-6 pt-4">
+    <main className="mx-auto flex w-full max-w-md flex-col px-5 pb-8 pt-4">
       {isTestMode && (
         <div className="mb-3 flex items-center gap-2 rounded-[8px] bg-signal/10 p-3 text-xs text-signal font-semibold">
           <AlertCircle className="h-4 w-4" />
@@ -196,7 +196,7 @@ function UpgradePage() {
         </div>
       )}
 
-      <div className="mx-auto overflow-hidden rounded-[8px] border border-border bg-ink h-44 sm:h-64 aspect-square">
+      <div className="mx-auto overflow-hidden rounded-[8px] border border-border bg-ink h-36 sm:h-56 aspect-square">
         <video
           src="/video.mp4"
           controls
@@ -210,7 +210,7 @@ function UpgradePage() {
       </div>
       {/* <p className="mt-2 text-center text-xs text-muted-foreground">20-second demo</p> */}
 
-      <h1 className="mt-4 text-center text-2xl font-bold">Start Making Money</h1>
+      <h1 className="mt-4 text-center text-xl font-bold">Start Making Money</h1>
 
       <div className="mt-3 flex items-baseline justify-center gap-2">
         <span className="metric text-4xl font-bold text-signal">₹99</span>
@@ -242,7 +242,7 @@ function UpgradePage() {
         <div className="text-xs text-muted-foreground">Auto-selected</div>
       </div> */}
 
-      <div className="mt-auto pt-6">
+      <div className="mt-6">
         <button
           onClick={startTrial}
           disabled={busy}
