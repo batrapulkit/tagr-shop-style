@@ -72,6 +72,11 @@ export async function logFunnel(
 
   const currentPhone = (meta?.["phone"] as string | undefined) || getStoredPhone() || "";
 
+  console.log(`📣 [TagLoop Analytics] Fired event: "${step}"`, {
+    meta,
+    phone: currentPhone,
+  });
+
   // 1. Meta Pixel
   if ((window as any).fbq) {
     try {
