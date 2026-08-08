@@ -221,7 +221,7 @@ export const createRazorpayOrderFn = createServerFn({ method: "POST" })
   .validator((d: { creatorId: string }) => d)
   .handler(async ({ data }) => {
     const { creatorId } = data;
-    const amount = 900; // ₹9 in Paise
+    const amount = 9900; // ₹99 in Paise
     const keyId = process.env["RAZORPAY_KEY_ID"] || "";
     const keySecret = process.env["RAZORPAY_KEY_SECRET"] || "";
 

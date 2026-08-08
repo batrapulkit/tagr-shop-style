@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2 } from "lucide-react";
 import { useEffect } from "react";
+import mixpanel from "mixpanel-browser";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
@@ -14,11 +15,22 @@ export const Route = createFileRoute("/welcome")({
 
 function WelcomePage() {
   useEffect(() => {
-    if (typeof window !== "undefined" && (window as any).fbq) {
+    if (typeof window !== "undefined") {
+      // 1. Meta Pixel
+      if ((window as any).fbq) {
+        try {
+          (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
+          (window as any).fbq("track", "PaymentCompleted", { value: 99.00, currency: "INR" });
+        } catch (e) {
+          console.warn("Meta Pixel Purchase/PaymentCompleted tracking failed:", e);
+        }
+      }
+
+      // 2. Mixpanel
       try {
-        (window as any).fbq("track", "Purchase", { value: 9.00, currency: "INR" });
+        mixpanel.track("payment_success", { value: 99.00, currency: "INR" });
       } catch (e) {
-        console.warn("Meta Pixel Purchase tracking failed:", e);
+        console.warn("Mixpanel payment success tracking failed:", e);
       }
     }
   }, []);
@@ -36,7 +48,7 @@ function WelcomePage() {
 
       <h1 className="mt-8 text-3xl leading-tight">You are officially in!</h1>
       <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
-        Your ₹9 trial has started. You now have unlimited scans, automatic link-in-bios, and click analytics.
+        Your ₹99 trial has started. You now have unlimited scans, automatic link-in-bios, and click analytics.
       </p>
 
       <ul className="mt-8 w-full space-y-2 text-left text-xs bg-card border border-border p-4 rounded-[8px] shadow-[0_1px_2px_rgba(18,22,31,0.06)]">

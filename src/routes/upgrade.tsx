@@ -12,10 +12,10 @@ export const Route = createFileRoute("/upgrade")({
       { title: "Start your trial — TagLoop" },
       {
         name: "description",
-        content: "₹9 for 7 days: unlimited scans, auto link-in-bio and click analytics on TagLoop.",
+        content: "₹99 for 7 days: unlimited scans, auto link-in-bio and click analytics on TagLoop.",
       },
       { property: "og:title", content: "Start your trial — TagLoop" },
-      { property: "og:description", content: "₹9 for 7 days, then ₹149/month. Cancel anytime." },
+      { property: "og:description", content: "₹99 for 7 days, then ₹149/month. Cancel anytime." },
     ],
   }),
   component: UpgradePage,
@@ -135,6 +135,14 @@ function UpgradePage() {
             });
 
             if (verification.success) {
+              if (typeof window !== "undefined" && (window as any).fbq) {
+                try {
+                  (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
+                  (window as any).fbq("track", "PaymentCompleted", { value: 99.00, currency: "INR" });
+                } catch (e) {
+                  console.warn("Meta Ads Complete tracking failed:", e);
+                }
+              }
               toast.success("Payment succeeded! Welcome to Pro.");
               void navigate({ to: "/welcome" });
             } else {
@@ -199,12 +207,12 @@ function UpgradePage() {
 
       <div className="mt-4 flex items-baseline justify-center gap-3">
         <span className="metric text-lg text-muted-foreground line-through">₹149</span>
-        <span className="metric text-5xl font-bold text-signal">₹9</span>
+        <span className="metric text-5xl font-bold text-signal">₹99</span>
       </div>
 
       <p className="mt-3 flex items-start justify-center gap-1.5 text-center text-xs text-muted-foreground">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        <span>₹9 for 7 days, then ₹149/month. Cancel anytime.</span>
+        <span>₹99 for 7 days, then ₹149/month. Cancel anytime.</span>
       </p>
 
       <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-[8px] border border-border bg-card px-4 py-3 text-xs shadow-[0_1px_2px_rgba(18,22,31,0.06)]">

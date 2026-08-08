@@ -272,7 +272,7 @@ function MetricsPage() {
                 { label: "3. Checked OTP digits", val: funnel.otp_verified, prev: funnel.phone_entered },
                 { label: "4. Viewed payment paywall", val: funnel.paywall_viewed, prev: funnel.otp_verified },
                 { label: "5. Clicked checkout start", val: funnel.checkout_started, prev: funnel.paywall_viewed },
-                { label: "6. Completed ₹9 payment", val: funnel.payment_success, prev: funnel.checkout_started },
+                { label: "6. Completed ₹99 payment", val: funnel.payment_success, prev: funnel.checkout_started },
               ].map((step, idx) => {
                 const totalPercent = getPercentOfViews(step.val);
                 const stepPercent = step.prev !== null ? getStepRatio(step.val, step.prev) : "100%";

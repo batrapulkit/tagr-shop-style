@@ -8,6 +8,14 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
+import mixpanel from "mixpanel-browser";
+
+if (typeof window !== "undefined") {
+  mixpanel.init('01798bd8b3cbbf807943147b251649d3', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  });
+}
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";

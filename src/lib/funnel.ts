@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import mixpanel from "mixpanel-browser";
 
 export type FunnelStep =
   | "landing_view"
@@ -46,21 +47,42 @@ export async function logFunnel(
   step: FunnelStep,
   meta?: Record<string, unknown>,
 ): Promise<void> {
-  if (typeof window !== "undefined" && (window as any).fbq) {
-    try {
-      if (step === "landing_view") {
-        (window as any).fbq("track", "ViewContent", { content_name: "Results View", ...meta });
-      } else if (step === "phone_entered") {
-        (window as any).fbq("track", "Lead", { content_name: "Phone Submission" });
-      } else if (step === "otp_verified") {
-        (window as any).fbq("track", "CompleteRegistration");
-      } else if (step === "checkout_started") {
-        (window as any).fbq("track", "InitiateCheckout");
-      } else if (step === "paywall_viewed") {
-        (window as any).fbq("track", "ViewContent", { content_name: "Paywall" });
+  if (typeof window !== "undefined") {
+    // 1. Meta Pixel
+    if ((window as any).fbq) {
+      try {
+        if (step === "landing_view") {
+          (window as any).fbq("track", "ViewContent", { content_name: "Results View", ...meta });
+        } else if (step === "phone_entered") {
+          (window as any).fbq("track", "Lead", { content_name: "Phone Submission" });
+        } else if (step === "otp_verified") {
+          (window as any).fbq("track", "CompleteRegistration");
+        } else if (step === "checkout_started") {
+          (window as any).fbq("track", "InitiateCheckout");
+          (window as any).fbq("track", "PaymentInitiated");
+        } else if (step === "paywall_viewed") {
+          (window as any).fbq("track", "ViewContent", { content_name: "Paywall" });
+        }
+      } catch (e) {
+        console.warn("Meta Pixel tracking failed:", e);
       }
+    }
+
+    // 2. Mixpanel Tracking
+    try {
+      const storedPhone = getStoredPhone();
+      const creatorId = getCreatorId();
+      if (creatorId) {
+        mixpanel.identify(creatorId);
+      }
+      if (storedPhone) {
+        mixpanel.people.set({
+          $phone: storedPhone,
+        });
+      }
+      mixpanel.track(step, meta);
     } catch (e) {
-      console.warn("Meta Pixel tracking failed:", e);
+      console.warn("Mixpanel tracking failed:", e);
     }
   }
 
