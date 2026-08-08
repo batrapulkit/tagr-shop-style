@@ -60,15 +60,18 @@ export async function logFunnel(
     return;
   }
 
-  // Deduplicate on client to prevent multiple event fires in single-page session
-  if (!window.__firedSteps) {
-    window.__firedSteps = new Set<string>();
+  // Only deduplicate automatic screen view steps (protects against React double rendering triggers)
+  const stepsToDeduplicate = ["landing_view", "login_page_viewed", "otp_screen_viewed", "paywall_viewed"];
+  if (stepsToDeduplicate.includes(step)) {
+    if (!window.__firedSteps) {
+      window.__firedSteps = new Set<string>();
+    }
+    if (window.__firedSteps.has(step)) {
+      console.log(`[Analytics] Deduplicated duplicate page view: ${step}`);
+      return;
+    }
+    window.__firedSteps.add(step);
   }
-  if (window.__firedSteps.has(step)) {
-    console.log(`[Analytics] Deduplicated duplicate step: ${step}`);
-    return;
-  }
-  window.__firedSteps.add(step);
 
   const currentPhone = (meta?.["phone"] as string | undefined) || getStoredPhone() || "";
 
@@ -98,11 +101,14 @@ export async function logFunnel(
         (window as any).fbq("track", "ViewContent", { content_name: "Paywall" });
         (window as any).fbq("trackCustom", "PaymentScreen");
       } else if (step === "checkout_started") {
-        (window as any).fbq("track", "InitiateCheckout");
+        (window as any).fbq("track", "InitiateCheckout", { value: 99.00, currency: "INR" });
         (window as any).fbq("trackCustom", "paymentInitiated");
+        (window as any).fbq("trackCustom", "PaymentInitiated");
       } else if (step === "payment_success") {
         (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
         (window as any).fbq("trackCustom", "paymentSuccess");
+        (window as any).fbq("trackCustom", "PaymentCompleted", { value: 99.00, currency: "INR" });
+        (window as any).fbq("trackCustom", "paymentCompleted", { value: 99.00, currency: "INR" });
       }
     } catch (e) {
       console.warn("Meta Pixel tracking failed:", e);
@@ -134,8 +140,11 @@ export async function logFunnel(
       mixpanel.track("PaymentScreen", meta);
     } else if (step === "checkout_started") {
       mixpanel.track("paymentInitiated", meta);
+      mixpanel.track("PaymentInitiated", meta);
     } else if (step === "payment_success") {
       mixpanel.track("paymentSuccess", { value: 99.00, currency: "INR", ...meta });
+      mixpanel.track("PaymentCompleted", { value: 99.00, currency: "INR", ...meta });
+      mixpanel.track("paymentCompleted", { value: 99.00, currency: "INR", ...meta });
     } else {
       mixpanel.track(step, meta);
     }
