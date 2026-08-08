@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import brandGraphic from "@/assets/tagloop-brand.png";
 import { logFunnel, setStoredPhone } from "@/lib/funnel";
 import { toast } from "sonner";
@@ -21,6 +21,10 @@ function SignupPage() {
   const [phone, setPhone] = useState("");
   const [accepted, setAccepted] = useState(true);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    void logFunnel("login_page_viewed");
+  }, []);
 
   const valid = phone.length === 10 && accepted;
 

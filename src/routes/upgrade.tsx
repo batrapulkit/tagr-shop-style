@@ -135,14 +135,7 @@ function UpgradePage() {
             });
 
             if (verification.success) {
-              if (typeof window !== "undefined" && (window as any).fbq) {
-                try {
-                  (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
-                  (window as any).fbq("track", "PaymentCompleted", { value: 99.00, currency: "INR" });
-                } catch (e) {
-                  console.warn("Meta Ads Complete tracking failed:", e);
-                }
-              }
+              void logFunnel("payment_success");
               toast.success("Payment succeeded! Welcome to Pro.");
               void navigate({ to: "/welcome" });
             } else {

@@ -34,6 +34,7 @@ function VerifyPage() {
       return;
     }
     setPhone(stored);
+    void logFunnel("otp_screen_viewed");
   }, [navigate]);
 
   useEffect(() => {

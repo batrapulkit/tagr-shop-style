@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2 } from "lucide-react";
 import { useEffect } from "react";
-import mixpanel from "mixpanel-browser";
+import { logFunnel } from "@/lib/funnel";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
@@ -15,24 +15,7 @@ export const Route = createFileRoute("/welcome")({
 
 function WelcomePage() {
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // 1. Meta Pixel
-      if ((window as any).fbq) {
-        try {
-          (window as any).fbq("track", "Purchase", { value: 99.00, currency: "INR" });
-          (window as any).fbq("track", "PaymentCompleted", { value: 99.00, currency: "INR" });
-        } catch (e) {
-          console.warn("Meta Pixel Purchase/PaymentCompleted tracking failed:", e);
-        }
-      }
-
-      // 2. Mixpanel
-      try {
-        mixpanel.track("payment_success", { value: 99.00, currency: "INR" });
-      } catch (e) {
-        console.warn("Mixpanel payment success tracking failed:", e);
-      }
-    }
+    void logFunnel("payment_success");
   }, []);
 
   return (
