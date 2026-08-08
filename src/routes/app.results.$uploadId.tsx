@@ -166,10 +166,7 @@ function ResultsPage() {
     }
   }
 
-  function getEstimatedCommission(category: string): number {
-    const rate = rates[category] || rates["other"] || 5.0;
-    return (rate * 0.01) * AVERAGE_ORDER_VALUE;
-  }
+
 
   if (loading) {
     return (
@@ -411,7 +408,6 @@ function ResultsPage() {
             const hasLink = !!links[item.id];
             const link = links[item.id];
             const isCopying = copiedCode === link?.short_code;
-            const commission = getEstimatedCommission(item.category);
 
             return (
               <div
@@ -490,7 +486,7 @@ function ResultsPage() {
                   <div className="flex items-center gap-1.5 text-rupee">
                     <Sparkles className="h-3.5 w-3.5" />
                     <span>
-                      Est. commission: <strong className="money font-bold">Up to 10% (₹{commission.toFixed(0)})</strong>
+                      Est. commission: <strong className="money font-bold">Up to 10%</strong>
                     </span>
                   </div>
                   <div className="flex items-center gap-1 text-[10px] text-muted-foreground group relative cursor-help">
