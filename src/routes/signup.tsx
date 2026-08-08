@@ -73,22 +73,22 @@ function SignupPage() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-8">
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-6">
       <p className="text-center font-display text-sm font-bold tracking-[-0.02em]">TagLoop</p>
 
-      <div className="mt-6 flex justify-center">
+      <div className="mt-4 flex justify-center">
         <img
           src="/logo.jpeg"
           alt="TagLoop Logo"
-          className="w-32 h-32 rounded-[16px] object-cover shadow-md"
+          className="w-24 h-24 rounded-[12px] object-cover shadow-md"
         />
       </div>
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="mt-4 text-center text-sm text-muted-foreground">
         Find what's shoppable in your photos and get paid for it.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 flex flex-1 flex-col">
+      <form onSubmit={onSubmit} className="mt-6 flex flex-col">
         <label htmlFor="phone" className="text-sm font-semibold">
           Log in
         </label>
@@ -132,7 +132,7 @@ function SignupPage() {
         <button
           type="submit"
           disabled={!valid || busy}
-          className="mt-auto w-full rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
+          className="mt-6 w-full rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
         >
           Continue
         </button>

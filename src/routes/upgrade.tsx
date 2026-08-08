@@ -188,15 +188,15 @@ function UpgradePage() {
   const isTestMode = keyId.startsWith("rzp_test_");
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-6">
+    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-6 pt-4">
       {isTestMode && (
-        <div className="mb-4 flex items-center gap-2 rounded-[8px] bg-signal/10 p-3 text-xs text-signal font-semibold">
+        <div className="mb-3 flex items-center gap-2 rounded-[8px] bg-signal/10 p-3 text-xs text-signal font-semibold">
           <AlertCircle className="h-4 w-4" />
           <span>Demo Payment Mode (Test Key Active)</span>
         </div>
       )}
 
-      <div className="overflow-hidden rounded-[8px] border border-border bg-ink aspect-square w-full">
+      <div className="mx-auto overflow-hidden rounded-[8px] border border-border bg-ink h-44 sm:h-64 aspect-square">
         <video
           src="/video.mp4"
           controls
@@ -210,19 +210,19 @@ function UpgradePage() {
       </div>
       {/* <p className="mt-2 text-center text-xs text-muted-foreground">20-second demo</p> */}
 
-      <h1 className="mt-6 text-center text-2xl">Start Making Money</h1>
+      <h1 className="mt-4 text-center text-2xl font-bold">Start Making Money</h1>
 
-      <div className="mt-4 flex items-baseline justify-center gap-2">
-        <span className="metric text-5xl font-bold text-signal">₹99</span>
-        <span className="text-xl text-muted-foreground">/month</span>
+      <div className="mt-3 flex items-baseline justify-center gap-2">
+        <span className="metric text-4xl font-bold text-signal">₹99</span>
+        <span className="text-lg text-muted-foreground">/month</span>
       </div>
 
-      <p className="mt-3 flex items-start justify-center gap-1.5 text-center text-xs text-muted-foreground">
+      <p className="mt-2 flex items-start justify-center gap-1.5 text-center text-xs text-muted-foreground">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
         <span>Cancel anytime.</span>
       </p>
 
-      <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-[8px] border border-border bg-card px-4 py-3 text-xs shadow-[0_1px_2px_rgba(18,22,31,0.06)]">
+      <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-[8px] border border-border bg-card px-4 py-2.5 text-xs shadow-[0_1px_2px_rgba(18,22,31,0.06)]">
         <li>Unlimited scans</li>
         <li className="text-muted-foreground">·</li>
         <li>Auto link-in-bio</li>
@@ -242,7 +242,7 @@ function UpgradePage() {
         <div className="text-xs text-muted-foreground">Auto-selected</div>
       </div> */}
 
-      <div className="mt-auto pt-8">
+      <div className="mt-auto pt-6">
         <button
           onClick={startTrial}
           disabled={busy}
