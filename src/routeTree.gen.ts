@@ -11,11 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as MetricsRouteImport } from './routes/metrics'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UpgradeRouteImport } from './routes/upgrade'
 import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as MetricsSeedCheckRouteImport } from './routes/metrics.seed-check'
+import { Route as RCodeRouteImport } from './routes/r.$code'
+import { Route as AppResultsUploadIdRouteImport } from './routes/app.results.$uploadId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -25,6 +31,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetricsRoute = MetricsRouteImport.update({
+  id: '/metrics',
+  path: '/metrics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -52,60 +63,135 @@ const VerifyRoute = VerifyRouteImport.update({
   path: '/verify',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const MetricsSeedCheckRoute = MetricsSeedCheckRouteImport.update({
+  id: '/seed-check',
+  path: '/seed-check',
+  getParentRoute: () => MetricsRoute,
+} as any)
+const RCodeRoute = RCodeRouteImport.update({
+  id: '/r/$code',
+  path: '/r/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppResultsUploadIdRoute = AppResultsUploadIdRouteImport.update({
+  id: '/results/$uploadId',
+  path: '/results/$uploadId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
+  '/metrics': typeof MetricsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/upgrade': typeof UpgradeRoute
   '/verify': typeof VerifyRoute
+  '/welcome': typeof WelcomeRoute
+  '/metrics/seed-check': typeof MetricsSeedCheckRoute
+  '/r/$code': typeof RCodeRoute
+  '/app/': typeof AppIndexRoute
+  '/app/results/$uploadId': typeof AppResultsUploadIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/metrics': typeof MetricsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/upgrade': typeof UpgradeRoute
   '/verify': typeof VerifyRoute
+  '/welcome': typeof WelcomeRoute
+  '/metrics/seed-check': typeof MetricsSeedCheckRoute
+  '/r/$code': typeof RCodeRoute
+  '/app': typeof AppIndexRoute
+  '/app/results/$uploadId': typeof AppResultsUploadIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
+  '/metrics': typeof MetricsRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/signup': typeof SignupRoute
   '/terms': typeof TermsRoute
   '/upgrade': typeof UpgradeRoute
   '/verify': typeof VerifyRoute
+  '/welcome': typeof WelcomeRoute
+  '/metrics/seed-check': typeof MetricsSeedCheckRoute
+  '/r/$code': typeof RCodeRoute
+  '/app/': typeof AppIndexRoute
+  '/app/results/$uploadId': typeof AppResultsUploadIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/app' | '/privacy' | '/signup' | '/terms' | '/upgrade' | '/verify'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/privacy' | '/signup' | '/terms' | '/upgrade' | '/verify'
-  id:
-    | '__root__'
     | '/'
     | '/app'
+    | '/metrics'
     | '/privacy'
     | '/signup'
     | '/terms'
     | '/upgrade'
     | '/verify'
+    | '/welcome'
+    | '/metrics/seed-check'
+    | '/r/$code'
+    | '/app/'
+    | '/app/results/$uploadId'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/metrics'
+    | '/privacy'
+    | '/signup'
+    | '/terms'
+    | '/upgrade'
+    | '/verify'
+    | '/welcome'
+    | '/metrics/seed-check'
+    | '/r/$code'
+    | '/app'
+    | '/app/results/$uploadId'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/metrics'
+    | '/privacy'
+    | '/signup'
+    | '/terms'
+    | '/upgrade'
+    | '/verify'
+    | '/welcome'
+    | '/metrics/seed-check'
+    | '/r/$code'
+    | '/app/'
+    | '/app/results/$uploadId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
+  MetricsRoute: typeof MetricsRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   SignupRoute: typeof SignupRoute
   TermsRoute: typeof TermsRoute
   UpgradeRoute: typeof UpgradeRoute
   VerifyRoute: typeof VerifyRoute
+  WelcomeRoute: typeof WelcomeRoute
+  RCodeRoute: typeof RCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metrics': {
+      id: '/metrics'
+      path: '/metrics'
+      fullPath: '/metrics'
+      preLoaderRoute: typeof MetricsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -159,18 +252,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/metrics/seed-check': {
+      id: '/metrics/seed-check'
+      path: '/seed-check'
+      fullPath: '/metrics/seed-check'
+      preLoaderRoute: typeof MetricsSeedCheckRouteImport
+      parentRoute: typeof MetricsRoute
+    }
+    '/r/$code': {
+      id: '/r/$code'
+      path: '/r/$code'
+      fullPath: '/r/$code'
+      preLoaderRoute: typeof RCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/results/$uploadId': {
+      id: '/app/results/$uploadId'
+      path: '/results/$uploadId'
+      fullPath: '/app/results/$uploadId'
+      preLoaderRoute: typeof AppResultsUploadIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppResultsUploadIdRoute: typeof AppResultsUploadIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppResultsUploadIdRoute: AppResultsUploadIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface MetricsRouteChildren {
+  MetricsSeedCheckRoute: typeof MetricsSeedCheckRoute
+}
+
+const MetricsRouteChildren: MetricsRouteChildren = {
+  MetricsSeedCheckRoute: MetricsSeedCheckRoute,
+}
+
+const MetricsRouteWithChildren =
+  MetricsRoute._addFileChildren(MetricsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
+  MetricsRoute: MetricsRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   SignupRoute: SignupRoute,
   TermsRoute: TermsRoute,
   UpgradeRoute: UpgradeRoute,
   VerifyRoute: VerifyRoute,
+  WelcomeRoute: WelcomeRoute,
+  RCodeRoute: RCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

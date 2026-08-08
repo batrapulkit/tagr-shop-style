@@ -3,6 +3,8 @@ import { ChevronLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getStoredPhone, logFunnel, setCreatorId } from "@/lib/funnel";
+import { verifyOtpFn, sendOtpFn } from "@/lib/server-functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/verify")({
   head: () => ({
@@ -68,13 +70,45 @@ function VerifyPage() {
     }
   }
 
+  async function handleResend() {
+    if (busy) return;
+    setCountdown(30);
+    setError(null);
+    try {
+      const res = await sendOtpFn({ data: { phone } });
+      if (res.success) {
+        if (res.isDemo) {
+          toast.info(`MVP Demo mode: Enter code ${res.code || '1234'}`);
+        } else {
+          toast.success("Verification code dispatched via SMS!");
+        }
+      } else {
+        setError("Could not resend code. Please try again.");
+      }
+    } catch (e) {
+      console.error(e);
+      setError("SMS resend communication error.");
+    }
+  }
+
   async function onContinue() {
     if (!valid || busy) return;
     setBusy(true);
     setError(null);
     try {
-      await logFunnel("otp_verified", { demo_mode: true });
+      // 1. Verify OTP code via server function
+      const check = await verifyOtpFn({ data: { phone, otp: code } });
 
+      if (!check.success) {
+        setError(check.error || "Incorrect verification code.");
+        setBusy(false);
+        return;
+      }
+
+      const isDemo = phone.startsWith("999") || phone.startsWith("123") || phone.includes("00000");
+      await logFunnel("otp_verified", { demo_mode: isDemo });
+
+      // 2. Fetch or create creator in database
       const { data: existing } = await supabase
         .from("creators")
         .select("id")
@@ -91,6 +125,7 @@ function VerifyPage() {
         if (insertError) throw insertError;
         creatorId = data.id;
       }
+
       setCreatorId(creatorId);
       void navigate({ to: "/upgrade" });
     } catch (err) {
@@ -101,6 +136,7 @@ function VerifyPage() {
   }
 
   const masked = phone ? phone : "XXXXXXXXXX";
+  const isTesting = phone.startsWith("999") || phone.startsWith("123") || phone.includes("00000");
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-6">
@@ -130,8 +166,11 @@ function VerifyPage() {
         ))}
       </div>
 
-      <p className="mt-3 text-xs text-muted-foreground">Demo mode — enter any 4 digits.</p>
-      {error && <p className="mt-2 text-xs text-signal">{error}</p>}
+      <p className="mt-3 text-xs text-muted-foreground font-medium">
+        Enter the 4-digit code. For MVP testing, you can use the master bypass code <span className="text-signal font-semibold">1234</span> to log in instantly!
+      </p>
+      
+      {error && <p className="mt-2 text-xs text-signal font-semibold">{error}</p>}
 
       <div className="mt-6 space-y-2 text-sm">
         {countdown > 0 ? (
@@ -139,13 +178,13 @@ function VerifyPage() {
             Didn't get it? Resend in <span className="metric">{countdown}s</span>
           </p>
         ) : (
-          <button onClick={() => setCountdown(30)} className="font-semibold text-signal">
-            Didn't get it? Resend
+          <button onClick={handleResend} className="font-semibold text-signal hover:opacity-90">
+            Didn't get it? Resend code
           </button>
         )}
         <div>
           <Link to="/signup" className="text-muted-foreground underline">
-            Change number
+            Change phone number
           </Link>
         </div>
       </div>
@@ -155,7 +194,7 @@ function VerifyPage() {
         disabled={!valid || busy}
         className="mt-auto w-full rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
       >
-        Continue
+        {busy ? "Verifying..." : "Continue"}
       </button>
     </main>
   );

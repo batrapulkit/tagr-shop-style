@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import brandGraphic from "@/assets/tagloop-brand.png";
 import { logFunnel, setStoredPhone } from "@/lib/funnel";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
@@ -27,9 +28,29 @@ function SignupPage() {
     e.preventDefault();
     if (!valid || busy) return;
     setBusy(true);
-    setStoredPhone(phone);
-    await logFunnel("phone_entered", { phone });
-    void navigate({ to: "/verify" });
+    try {
+      setStoredPhone(phone);
+      await logFunnel("phone_entered", { phone });
+
+      const { sendOtpFn } = await import("@/lib/server-functions");
+      const res = await sendOtpFn({ data: { phone } });
+
+      if (res.success) {
+        if (res.isDemo) {
+          toast.info(`MVP Demo mode: Enter code ${res.code || '1234'}`);
+        } else {
+          toast.success("Verification code dispatched via SMS!");
+        }
+        void navigate({ to: "/verify" });
+      } else {
+        toast.error("Internal gateway error sending OTP. Try again.");
+        setBusy(false);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error connecting with SMS gateway.");
+      setBusy(false);
+    }
   }
 
   return (

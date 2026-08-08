@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.15"
   }
@@ -105,6 +103,206 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      otps: {
+        Row: {
+          id: string
+          phone: string
+          otp: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          phone: string
+          otp: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          phone?: string
+          otp?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      uploads: {
+        Row: {
+          id: string
+          creator_id: string | null
+          storage_path: string
+          processing_ms: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          creator_id?: string | null
+          storage_path: string
+          processing_ms?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          creator_id?: string | null
+          storage_path?: string
+          processing_ms?: number | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "uploads_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creators"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      detected_items: {
+        Row: {
+          id: string
+          upload_id: string | null
+          category: string
+          name: string
+          primary_color: string | null
+          secondary_color: string | null
+          pattern: string | null
+          material_guess: string | null
+          fit_or_style: string | null
+          gender_presentation: string | null
+          search_query: string
+          confidence: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          upload_id?: string | null
+          category: string
+          name: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          pattern?: string | null
+          material_guess?: string | null
+          fit_or_style?: string | null
+          gender_presentation?: string | null
+          search_query: string
+          confidence?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          upload_id?: string | null
+          category?: string
+          name?: string
+          primary_color?: string | null
+          secondary_color?: string | null
+          pattern?: string | null
+          material_guess?: string | null
+          fit_or_style?: string | null
+          gender_presentation?: string | null
+          search_query?: string
+          confidence?: number | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detected_items_upload_id_fkey"
+            columns: ["upload_id"]
+            isOneToOne: false
+            referencedRelation: "uploads"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      affiliate_links: {
+        Row: {
+          id: string
+          detected_item_id: string | null
+          original_url: string
+          short_code: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          detected_item_id?: string | null
+          original_url: string
+          short_code: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          detected_item_id?: string | null
+          original_url?: string
+          short_code?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_links_detected_item_id_fkey"
+            columns: ["detected_item_id"]
+            isOneToOne: false
+            referencedRelation: "detected_items"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      clicks: {
+        Row: {
+          id: string
+          link_id: string | null
+          referrer: string | null
+          user_agent: string | null
+          hashed_ip: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          link_id?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+          hashed_ip?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          link_id?: string | null
+          referrer?: string | null
+          user_agent?: string | null
+          hashed_ip?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clicks_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "affiliate_links"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      commission_rates: {
+        Row: {
+          id: string
+          category: string
+          rate_percent: number
+          source_url: string | null
+          verified_on: string
+        }
+        Insert: {
+          id?: string
+          category: string
+          rate_percent: number
+          source_url?: string | null
+          verified_on?: string
+        }
+        Update: {
+          id?: string
+          category?: string
+          rate_percent?: number
+          source_url?: string | null
+          verified_on?: string
+        }
+        Relationships: []
       }
     }
     Views: {

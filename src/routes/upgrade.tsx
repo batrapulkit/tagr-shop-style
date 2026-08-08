@@ -1,8 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Info } from "lucide-react";
-import { useEffect } from "react";
+import { Info, AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import brandGraphic from "@/assets/tagloop-brand.png";
-import { logFunnel } from "@/lib/funnel";
+import { logFunnel, getCreatorId, getStoredPhone } from "@/lib/funnel";
+import { createRazorpayOrderFn, verifyRazorpayPaymentFn } from "@/lib/server-functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/upgrade")({
   head: () => ({
@@ -19,11 +21,60 @@ export const Route = createFileRoute("/upgrade")({
   component: UpgradePage,
 });
 
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  prefill: {
+    contact: string;
+  };
+  theme: {
+    color: string;
+  };
+  handler: (response: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  }) => Promise<void>;
+  modal: {
+    ondismiss: () => void;
+  };
+}
+
+declare global {
+  interface Window {
+    Razorpay: new (options: RazorpayOptions) => {
+      open: () => void;
+    };
+  }
+}
+
 function UpgradePage() {
   const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const [keyId, setKeyId] = useState("");
 
   useEffect(() => {
     void logFunnel("paywall_viewed");
+    
+    // Pre-extract key state to determine test mode banner
+    const testKey = import.meta.env['VITE_RAZORPAY_KEY_ID'] || process.env['RAZORPAY_KEY_ID'] || "rzp_live_TN22YzLCuwN2BZ";
+    setKeyId(testKey);
+
+    // Dynamically inject Razorpay Checkout JS
+    if (typeof window !== "undefined") {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      document.body.appendChild(script);
+      return () => {
+        document.body.removeChild(script);
+      };
+    }
+    return;
   }, []);
 
   async function skip() {
@@ -31,14 +82,115 @@ function UpgradePage() {
     void navigate({ to: "/app" });
   }
 
+  async function startTrial() {
+    if (busy) return;
+    setBusy(true);
+
+    const creatorId = getCreatorId();
+    if (!creatorId) {
+      toast.error("Please login and register your phone first!");
+      setBusy(false);
+      void navigate({ to: "/signup" });
+      return;
+    }
+
+    try {
+      await logFunnel("checkout_started");
+
+      // Retrieve Razorpay order particulars from server function
+      const order = await createRazorpayOrderFn({ data: { creatorId } });
+
+      if (!window.Razorpay) {
+        toast.error("Razorpay SDK failed to load. Please refresh and try again.");
+        setBusy(false);
+        return;
+      }
+
+      const phone = getStoredPhone() || "";
+
+      // Configure Razorpay checkout widget
+      const rzp = new window.Razorpay({
+        key: order.key_id,
+        amount: order.amount,
+        currency: "INR",
+        name: "TagLoop",
+        description: "7-day trial",
+        order_id: order.order_id,
+        prefill: {
+          contact: phone,
+        },
+        theme: {
+          color: "#E5175B",
+        },
+        handler: async (response) => {
+          setBusy(true);
+          try {
+            const verification = await verifyRazorpayPaymentFn({
+              data: {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                creator_id: creatorId,
+              }
+            });
+
+            if (verification.success) {
+              toast.success("Payment succeeded! Welcome to Pro.");
+              void navigate({ to: "/welcome" });
+            } else {
+              toast.error(verification.error || "Payment verification failed.");
+            }
+          } catch (err) {
+            console.error(err);
+            toast.error("Error verifying payment.");
+          } finally {
+            setBusy(false);
+          }
+        },
+        modal: {
+          ondismiss: async () => {
+            console.log("Checkout modal dismissed.");
+            setBusy(false);
+            try {
+              await verifyRazorpayPaymentFn({
+                data: {
+                  razorpay_order_id: order.order_id,
+                  creator_id: creatorId,
+                  dismissed: true,
+                }
+              });
+            } catch (err) {
+              console.error(err);
+            }
+          },
+        },
+      });
+
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      toast.error("Could not initialize payment checkout. Try again.");
+      setBusy(false);
+    }
+  }
+
+  const isTestMode = keyId.startsWith("rzp_test_");
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 pb-8 pt-6">
-      <div className="overflow-hidden rounded-[8px] border border-border bg-ink">
+      {isTestMode && (
+        <div className="mb-4 flex items-center gap-2 rounded-[8px] bg-signal/10 p-3 text-xs text-signal font-semibold">
+          <AlertCircle className="h-4 w-4" />
+          <span>Demo Payment Mode (Test Key Active)</span>
+        </div>
+      )}
+
+      <div className="overflow-hidden rounded-[8px] border border-border bg-ink aspect-square w-full">
         <video
           controls
           muted
           poster={brandGraphic}
-          className="h-44 w-full bg-ink object-contain"
+          className="h-full w-full bg-ink object-cover"
         />
       </div>
       <p className="mt-2 text-center text-xs text-muted-foreground">20-second demo</p>
@@ -72,16 +224,21 @@ function UpgradePage() {
           </span>
           <span className="text-sm font-semibold">Razorpay</span>
         </div>
-        <button className="text-xs font-semibold text-signal">Change</button>
+        <div className="text-xs text-muted-foreground">Auto-selected</div>
       </div>
 
       <div className="mt-auto pt-8">
-        <button className="w-full rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90">
-          Start trial
+        <button
+          onClick={startTrial}
+          disabled={busy}
+          className="w-full rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
+        >
+          {busy ? "Loading..." : "Start trial"}
         </button>
         <button
           onClick={skip}
-          className="mt-3 w-full py-2 text-center text-sm text-muted-foreground underline"
+          disabled={busy}
+          className="mt-3 w-full py-2 text-center text-sm text-muted-foreground underline disabled:opacity-50"
         >
           Skip for now
         </button>
