@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { logFunnel, setStoredPhone } from "@/lib/funnel";
+import { logFunnel, setStoredPhone, setCreatorId } from "@/lib/funnel";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
@@ -33,25 +34,40 @@ function SignupPage() {
     setBusy(true);
     try {
       setStoredPhone(phone);
+      // Fire phone entered funnel event
       await logFunnel("phone_entered", { phone });
 
-      const { sendOtpFn } = await import("@/lib/server-functions");
-      const res = await sendOtpFn({ data: { phone } });
+      // 1. Fetch or create creator in database
+      const { data: existing, error: fetchError } = await supabase
+        .from("creators")
+        .select("id")
+        .eq("phone", phone)
+        .maybeSingle();
 
-      if (res.success) {
-        if (res.isDemo) {
-          toast.info(`MVP Demo mode: Enter code ${res.code || '1234'}`);
-        } else {
-          toast.success("Verification code dispatched via SMS!");
-        }
-        void navigate({ to: "/verify" });
-      } else {
-        toast.error("Internal gateway error sending OTP. Try again.");
-        setBusy(false);
+      if (fetchError) throw fetchError;
+
+      let creatorId = existing?.id ?? null;
+      if (!creatorId) {
+        const { data, error: insertError } = await supabase
+          .from("creators")
+          .insert({ phone })
+          .select("id")
+          .single();
+        if (insertError) throw insertError;
+        creatorId = data.id;
       }
+
+      setCreatorId(creatorId);
+      
+      // Auto-trigger registration / otp verification completion analytics
+      const isDemo = phone.startsWith("999") || phone.startsWith("123") || phone.includes("00000");
+      await logFunnel("otp_verified", { demo_mode: isDemo });
+
+      toast.success("Welcome! Directing to payment page...");
+      void navigate({ to: "/upgrade" });
     } catch (err) {
-      console.error(err);
-      toast.error("Error connecting with SMS gateway.");
+      console.error("Account creation failed:", err);
+      toast.error("Couldn't create your account. Try again.");
       setBusy(false);
     }
   }

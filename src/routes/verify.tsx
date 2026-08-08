@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link, redirect } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,9 @@ import { verifyOtpFn, sendOtpFn } from "@/lib/server-functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/verify")({
+  beforeLoad: () => {
+    throw redirect({ to: "/signup" });
+  },
   head: () => ({
     meta: [
       { title: "Verify your number — TagLoop" },
