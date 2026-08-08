@@ -40,9 +40,13 @@ function Landing() {
         <span className="font-display text-sm font-bold tracking-[-0.02em]">TagLoop</span>
       </div>
 
-      <h1 className="mt-10 text-[2.1rem] leading-[1.05] sm:text-5xl">
+      {/* <h1 className="mt-10 text-[2.1rem] leading-[1.05] sm:text-5xl">
         Your last 40 reels had <span className="money text-[0.95em]">₹0</span> attached to them.
         Fix that in one upload.
+      </h1> */}
+
+      <h1 className="mt-10 text-[2.1rem] leading-[1.05] sm:text-5xl">
+        You can earn with every single social media post now
       </h1>
 
       <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-muted-foreground">
@@ -66,11 +70,11 @@ function Landing() {
         to="/signup"
         className="mt-8 flex h-13 w-full items-center justify-center rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
       >
-        Start free
+        Start Now
       </Link>
 
       <p className="mt-auto pt-10 text-center text-xs text-muted-foreground">
-        Free while we're in beta. Works with Amazon India Associates.
+        Works with Amazon India Associates.
       </p>
     </main>
   );

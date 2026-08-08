@@ -58,7 +58,7 @@ function UpgradePage() {
 
   useEffect(() => {
     void logFunnel("paywall_viewed");
-    
+
     // Pre-extract key state to determine test mode banner
     const testKey = import.meta.env['VITE_RAZORPAY_KEY_ID'] || process.env['RAZORPAY_KEY_ID'] || "rzp_live_TN22YzLCuwN2BZ";
     setKeyId(testKey);
@@ -208,7 +208,7 @@ function UpgradePage() {
           className="h-full w-full bg-ink object-cover"
         />
       </div>
-      <p className="mt-2 text-center text-xs text-muted-foreground">20-second demo</p>
+      {/* <p className="mt-2 text-center text-xs text-muted-foreground">20-second demo</p> */}
 
       <h1 className="mt-6 text-center text-2xl">Start Making Money</h1>
 
@@ -230,7 +230,7 @@ function UpgradePage() {
         <li>Click analytics</li>
       </ul>
 
-      <p className="mt-4 text-center text-xs text-muted-foreground">Built for Indian creators</p>
+      {/* <p className="mt-4 text-center text-xs text-muted-foreground">Built for Indian creators</p>
 
       <div className="mt-6 flex items-center justify-between rounded-[8px] border border-border bg-card px-4 py-3 shadow-[0_1px_2px_rgba(18,22,31,0.06)]">
         <div className="flex items-center gap-2">
@@ -240,7 +240,7 @@ function UpgradePage() {
           <span className="text-sm font-semibold">Razorpay</span>
         </div>
         <div className="text-xs text-muted-foreground">Auto-selected</div>
-      </div>
+      </div> */}
 
       <div className="mt-auto pt-8">
         <button
@@ -250,13 +250,13 @@ function UpgradePage() {
         >
           {busy ? "Loading..." : "Start Making Money"}
         </button>
-        <button
+        {/* <button
           onClick={skip}
           disabled={busy}
           className="mt-3 w-full py-2 text-center text-sm text-muted-foreground underline disabled:opacity-50"
         >
           Skip for now
-        </button>
+        </button> */}
       </div>
     </main>
   );
