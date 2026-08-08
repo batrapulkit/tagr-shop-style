@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Info, AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import brandGraphic from "@/assets/tagloop-brand.png";
 import { logFunnel, getCreatorId, getStoredPhone } from "@/lib/funnel";
 import { createRazorpayOrderFn, verifyRazorpayPaymentFn } from "@/lib/server-functions";
 import { toast } from "sonner";
@@ -9,13 +8,13 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/upgrade")({
   head: () => ({
     meta: [
-      { title: "Start your trial — TagLoop" },
+      { title: "Start Making Money — TagLoop" },
       {
         name: "description",
-        content: "₹99 for 7 days: unlimited scans, auto link-in-bio and click analytics on TagLoop.",
+        content: "₹99/month: unlimited scans, auto link-in-bio and click analytics on TagLoop.",
       },
-      { property: "og:title", content: "Start your trial — TagLoop" },
-      { property: "og:description", content: "₹99 for 7 days, then ₹149/month. Cancel anytime." },
+      { property: "og:title", content: "Start Making Money — TagLoop" },
+      { property: "og:description", content: "₹99/month. Cancel anytime." },
     ],
   }),
   component: UpgradePage,
@@ -114,7 +113,7 @@ function UpgradePage() {
         amount: order.amount,
         currency: "INR",
         name: "TagLoop",
-        description: "7-day trial",
+        description: "Pro Monthly Subscription",
         order_id: order.order_id,
         prefill: {
           contact: phone,
@@ -188,24 +187,28 @@ function UpgradePage() {
 
       <div className="overflow-hidden rounded-[8px] border border-border bg-ink aspect-square w-full">
         <video
+          src="/video.mp4"
           controls
+          autoPlay
+          loop
           muted
-          poster={brandGraphic}
+          playsInline
+          poster="/logo.jpeg"
           className="h-full w-full bg-ink object-cover"
         />
       </div>
       <p className="mt-2 text-center text-xs text-muted-foreground">20-second demo</p>
 
-      <h1 className="mt-6 text-center text-2xl">Start your trial</h1>
+      <h1 className="mt-6 text-center text-2xl">Start Making Money</h1>
 
-      <div className="mt-4 flex items-baseline justify-center gap-3">
-        <span className="metric text-lg text-muted-foreground line-through">₹149</span>
+      <div className="mt-4 flex items-baseline justify-center gap-2">
         <span className="metric text-5xl font-bold text-signal">₹99</span>
+        <span className="text-xl text-muted-foreground">/month</span>
       </div>
 
       <p className="mt-3 flex items-start justify-center gap-1.5 text-center text-xs text-muted-foreground">
         <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        <span>₹99 for 7 days, then ₹149/month. Cancel anytime.</span>
+        <span>Cancel anytime.</span>
       </p>
 
       <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-[8px] border border-border bg-card px-4 py-3 text-xs shadow-[0_1px_2px_rgba(18,22,31,0.06)]">
@@ -234,7 +237,7 @@ function UpgradePage() {
           disabled={busy}
           className="w-full rounded-[8px] bg-signal px-4 py-4 text-[0.95rem] font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          {busy ? "Loading..." : "Start trial"}
+          {busy ? "Loading..." : "Start Making Money"}
         </button>
         <button
           onClick={skip}

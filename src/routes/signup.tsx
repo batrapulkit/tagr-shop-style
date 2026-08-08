@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import brandGraphic from "@/assets/tagloop-brand.png";
 import { logFunnel, setStoredPhone } from "@/lib/funnel";
 import { toast } from "sonner";
 
@@ -63,9 +62,9 @@ function SignupPage() {
 
       <div className="mt-6 flex justify-center">
         <img
-          src={brandGraphic}
-          alt="Outfit photo annotated with product tag chips"
-          className="w-56 max-w-full"
+          src="/logo.jpeg"
+          alt="TagLoop Logo"
+          className="w-32 h-32 rounded-[16px] object-cover shadow-md"
         />
       </div>
 

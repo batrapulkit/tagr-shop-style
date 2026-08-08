@@ -7,7 +7,7 @@ export const Route = createFileRoute("/welcome")({
   head: () => ({
     meta: [
       { title: "Welcome to Pro — TagLoop" },
-      { name: "description", content: "Your trial has started successfully. Welcome to TagLoop Pro!" },
+      { name: "description", content: "Your Pro subscription has started successfully. Welcome to TagLoop Pro!" },
     ],
   }),
   component: WelcomePage,
@@ -31,7 +31,7 @@ function WelcomePage() {
 
       <h1 className="mt-8 text-3xl leading-tight">You are officially in!</h1>
       <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
-        Your ₹99 trial has started. You now have unlimited scans, automatic link-in-bios, and click analytics.
+        Your Pro subscription has started. You now have unlimited scans, automatic link-in-bios, and click analytics.
       </p>
 
       <ul className="mt-8 w-full space-y-2 text-left text-xs bg-card border border-border p-4 rounded-[8px] shadow-[0_1px_2px_rgba(18,22,31,0.06)]">
