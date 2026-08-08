@@ -52,8 +52,6 @@ function ResultsPage() {
   const [items, setItems] = useState<DetectedItem[]>([]);
   const [links, setLinks] = useState<Record<string, AffiliateLink>>({});
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editQuery, setEditQuery] = useState("");
   const [rates, setRates] = useState<Record<string, number>>({});
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [activeTagId, setActiveTagId] = useState<string | null>(null);
@@ -166,63 +164,6 @@ function ResultsPage() {
     } finally {
       setDeletingId(null);
     }
-  }
-
-  async function handleSaveQuery(itemId: string) {
-    if (!editQuery.trim()) return;
-    
-    try {
-      // 1. Log correction
-      await logFunnel("landing_view", {
-        action: "item_query_edited",
-        item_id: itemId,
-        old_query: items.find((it) => it.id === itemId)?.search_query,
-        new_query: editQuery,
-      });
-
-      // 2. Read Store ID from process/env
-      const associateTag = import.meta.env['VITE_AMAZON_ASSOCIATE_TAG'] || "kars0c2-21";
-      const newUrl = `https://www.amazon.in/s?k=${encodeURIComponent(editQuery)}&tag=${associateTag}`;
-
-      // 3. Update detected_items query
-      const { error: itemErr } = await supabase
-        .from("detected_items")
-        .update({ search_query: editQuery })
-        .eq("id", itemId);
-
-      if (itemErr) throw itemErr;
-
-      // 4. Update affiliate_links url
-      const lnk = links[itemId];
-      if (lnk) {
-        const { error: linkErr } = await supabase
-          .from("affiliate_links")
-          .update({ original_url: newUrl })
-          .eq("id", lnk.id);
-        
-        if (linkErr) throw linkErr;
-
-        setLinks((prev) => ({
-          ...prev,
-          [itemId]: { ...lnk, original_url: newUrl },
-        }));
-      }
-
-      setItems((prev) =>
-        prev.map((it) => (it.id === itemId ? { ...it, search_query: editQuery } : it))
-      );
-
-      toast.success("Affiliate query targets updated!");
-      setEditingId(null);
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not update query.");
-    }
-  }
-
-  function startEdit(itemId: string, currentQuery: string) {
-    setEditingId(itemId);
-    setEditQuery(currentQuery);
   }
 
   function getEstimatedCommission(category: string): number {
@@ -498,9 +439,6 @@ function ResultsPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <div className="metric text-xs bg-muted px-2 py-0.5 rounded text-muted-foreground" title="Confidence Assessment">
-                      {((item.confidence || 0.9) * 100).toFixed(0)}%
-                    </div>
                     <button
                       onClick={() => handleDelete(item.id)}
                       disabled={deletingId === item.id}
@@ -515,43 +453,13 @@ function ResultsPage() {
                 <div className="mt-4 pt-3 border-t border-border flex items-center justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">
-                      Search matches (editable)
+                      Search matches
                     </span>
-                    {editingId === item.id ? (
-                      <div className="flex items-center gap-1.5 mt-1.5">
-                        <input
-                          type="text"
-                          value={editQuery}
-                          onChange={(e) => setEditQuery(e.target.value)}
-                          className="flex-1 bg-muted px-2.5 py-1 text-xs rounded border border-border outline-none focus:border-signal"
-                        />
-                        <button
-                          onClick={() => handleSaveQuery(item.id)}
-                          className="text-xs bg-signal text-white px-2 py-1.5 rounded font-semibold hover:opacity-90"
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={() => setEditingId(null)}
-                          className="text-xs text-muted-foreground hover:text-foreground px-1"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1 mt-1 group">
-                        <span className="text-xs text-foreground truncate max-w-[150px] sm:max-w-[220px]">
-                          "{item.search_query}"
-                        </span>
-                        <button
-                          onClick={() => startEdit(item.id, item.search_query)}
-                          className="text-muted-foreground hover:text-foreground p-0.5"
-                          title="Edit search target details"
-                        >
-                          <Edit2 className="h-3 w-3" />
-                        </button>
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1 mt-1 group">
+                      <span className="text-xs text-foreground truncate max-w-[150px] sm:max-w-[220px]">
+                        "{item.search_query}"
+                      </span>
+                    </div>
                   </div>
 
                   {hasLink && link && (
@@ -559,8 +467,8 @@ function ResultsPage() {
                       onClick={() => handleCopy(link.short_code)}
                       className={`flex h-9 items-center gap-1.5 rounded-[6px] px-3.5 text-xs font-semibold transition-all ${
                         isCopying
-                          ? "bg-rupee text-white"
-                          : "bg-signal text-white hover:opacity-95"
+                           ? "bg-rupee text-white"
+                           : "bg-signal text-white hover:opacity-95"
                       }`}
                     >
                       {isCopying ? (
@@ -582,14 +490,14 @@ function ResultsPage() {
                   <div className="flex items-center gap-1.5 text-rupee">
                     <Sparkles className="h-3.5 w-3.5" />
                     <span>
-                      Est. commission: <strong className="money font-bold">₹{commission.toFixed(0)}</strong>
+                      Est. commission: <strong className="money font-bold">Up to 10% (₹{commission.toFixed(0)})</strong>
                     </span>
                   </div>
                   <div className="flex items-center gap-1 text-[10px] text-muted-foreground group relative cursor-help">
                     <Info className="h-3 w-3" />
                     <span>AOV ₹{AVERAGE_ORDER_VALUE}</span>
                     <span className="absolute bottom-full right-0 mb-1 hidden group-hover:block bg-ink text-white p-2 rounded text-[9px] w-48 leading-relaxed shadow-lg z-10">
-                      Based on a 15% estimated conversion rate of a ₹{AVERAGE_ORDER_VALUE} average order value on Amazon India.
+                      Based on up to 10% commission rate of a ₹{AVERAGE_ORDER_VALUE} average order value on Amazon India.
                     </span>
                   </div>
                 </div>
