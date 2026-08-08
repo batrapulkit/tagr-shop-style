@@ -196,13 +196,12 @@ function UpgradePage() {
         </div>
       )}
 
-      <div className="mx-auto overflow-hidden rounded-[8px] border border-border bg-ink h-36 sm:h-56 aspect-square">
+      <div className="overflow-hidden rounded-[8px] border border-border bg-ink aspect-square w-full">
         <video
           src="/video.mp4"
           controls
           autoPlay
           loop
-          muted
           playsInline
           poster="/logo.jpeg"
           className="h-full w-full bg-ink object-cover"
