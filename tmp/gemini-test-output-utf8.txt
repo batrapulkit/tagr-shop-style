@@ -1,0 +1,52 @@
+﻿Testing model: gemini-3.6-flash...
+Status: 200 OK
+Raw Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"message\": \"test\"}",
+            "thoughtSignature": "EsoECscEARFNMg+Rl3pixQ2Dv4p6mHvKYQ5UDwGQLjYytH4WO5PKJ6LSM8pYh0ecYlNlD6j01esWbDoCipEgfZxnQanooCQzZ3XhI9GBCGyIKdmXTK2jWRa4e/q88uV4cos4JPw0z+98fu8tR0Mdh8auuMtMyHRblP83n9uncGP1GiQqHmdldD8S/Y5p/Y0VaXW+1r18IKf4Gt/DSwA17mYWnl3HH5uoPnla6xYeTWHFqWl+uZ9hxSK6vWt6BaiRLNFOXSvk9/YOF/PpwYo89/LA83OYFCD5tKxJWgnhTYjd03rPtJj8wifwbjsk1ulDPCkITYekh0iIJ5fW5aY9wabymbX1AUQS9sdJsxl5MB7HIXFaE1/5VCTOMqPSUbLIshNuAWC1HKRf47wW5tk8BEt2E9HvfTLMdhd9m+5gHG1HAu6168YNmbgz0MaVHfEMj0nDb0ZeZCOYvAUsSjHRZjTwnyjimaqycXUBq1rMDZceA9lWZfmG7lcbXxzjhE2HjHJQEIdAjGDNBo9fKtP+GPHr0KHbBUKXHZbZ5Ybk0OvJlYZMp9owCAHL0bGSd7VOOzbzpcyEE1tbvAj0Ecbpb8+Yl9JOy+Wniww4+cGyQOxbAcMvaj1Cmuz3KrfHZRU9DKjAHCDYyzwdhg8XOfeG+PkSfSRKi9DHJS6lMzqlg5D2Dks8ta0e8qMowmKq4oE7hQsRBlXhla/omCj0o8vfKdKrMOX0l7ORNNO836InHRkKMeHhqIYHwdJP/PgDz5TTsThICd+FLNrYe5AG9g=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1101,
+    "candidatesTokenCount": 6,
+    "totalTokenCount": 1241,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1089
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 12
+      }
+    ],
+    "thoughtsTokenCount": 134,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.6-flash",
+  "responseId": "UWx2ase5FvvIjuMPg9TnkAE"
+}
+
+
+-----------------------------------------------
+
+Testing model: gemini-2.5-flash...
+Status: 404 Not Found
+Raw Response: {
+  "error": {
+    "code": 404,
+    "message": "This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use a newer model for the latest features and improvements.",
+    "status": "NOT_FOUND"
+  }
+}
+

@@ -1,0 +1,22 @@
+src/routes/app.results.$uploadId.tsx(183,44): error TS4111: Property 'VITE_AMAZON_ASSOCIATE_TAG' comes from an index signature, so it must be accessed with ['VITE_AMAZON_ASSOCIATE_TAG'].
+src/routes/app.results.$uploadId.tsx(437,49): error TS18048: 'link' is possibly 'undefined'.
+src/routes/metrics.tsx(90,11): error TS2532: Object is possibly 'undefined'.
+src/routes/metrics.tsx(95,24): error TS18048: 'sessionSteps.landing_view' is possibly 'undefined'.
+src/routes/metrics.tsx(95,37): error TS4111: Property 'landing_view' comes from an index signature, so it must be accessed with ['landing_view'].
+src/routes/metrics.tsx(96,24): error TS18048: 'sessionSteps.phone_entered' is possibly 'undefined'.
+src/routes/metrics.tsx(96,37): error TS4111: Property 'phone_entered' comes from an index signature, so it must be accessed with ['phone_entered'].
+src/routes/metrics.tsx(97,23): error TS18048: 'sessionSteps.otp_verified' is possibly 'undefined'.
+src/routes/metrics.tsx(97,36): error TS4111: Property 'otp_verified' comes from an index signature, so it must be accessed with ['otp_verified'].
+src/routes/metrics.tsx(98,25): error TS18048: 'sessionSteps.paywall_viewed' is possibly 'undefined'.
+src/routes/metrics.tsx(98,38): error TS4111: Property 'paywall_viewed' comes from an index signature, so it must be accessed with ['paywall_viewed'].
+src/routes/metrics.tsx(99,27): error TS18048: 'sessionSteps.checkout_started' is possibly 'undefined'.
+src/routes/metrics.tsx(99,40): error TS4111: Property 'checkout_started' comes from an index signature, so it must be accessed with ['checkout_started'].
+src/routes/metrics.tsx(100,26): error TS18048: 'sessionSteps.payment_success' is possibly 'undefined'.
+src/routes/metrics.tsx(100,39): error TS4111: Property 'payment_success' comes from an index signature, so it must be accessed with ['payment_success'].
+src/routes/metrics.tsx(101,26): error TS18048: 'sessionSteps.paywall_skipped' is possibly 'undefined'.
+src/routes/metrics.tsx(101,39): error TS4111: Property 'paywall_skipped' comes from an index signature, so it must be accessed with ['paywall_skipped'].
+src/routes/metrics.tsx(121,9): error TS2322: Type 'number | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+src/routes/metrics.tsx(133,27): error TS4111: Property 'action' comes from an index signature, so it must be accessed with ['action'].
+src/routes/metrics.tsx(133,61): error TS4111: Property 'action' comes from an index signature, so it must be accessed with ['action'].
+src/routes/r.$code.tsx(9,43): error TS2353: Object literal may only specify known properties, and 'code' does not exist in type 'RequiredFetcherDataOptions<undefined, (d: { code: string; }) => { code: string; }>'.

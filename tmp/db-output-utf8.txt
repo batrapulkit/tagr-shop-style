@@ -1,0 +1,27 @@
+﻿Fetching recent uploads via HTTP REST API...
+
+Upload ID: 98e87c6a-15ba-4d5c-97c5-07bfd278ae19
+Created At: 2026-08-07T23:30:17.772509+00:00
+Storage Path: 850430f7-c48b-4fe0-b78a-933e809840f9/3461b4aa-351d-45b5-aefc-d39abf30828d.png
+Processing time: 9037 ms
+Detected items (2):
+  - Category: top, Name: brown printed crew neck t-shirt, Query: "mens dark brown t shirt printed chest logo"
+  - Category: watch, Name: black rectangular smartwatch, Query: "black smartwatch rectangular dial for men"
+
+Upload ID: 738819b3-522d-48d9-bf19-19c648f4a6da
+Created At: 2026-08-07T23:27:09.606219+00:00
+Storage Path: 850430f7-c48b-4fe0-b78a-933e809840f9/a3cabb8f-1667-4ff5-9607-0c9c4c72469e.png
+Processing time: 1630 ms
+Detected items (3):
+  - Category: top, Name: oversized solid white cotton t-shirt, Query: "men oversized white t-shirt cotton loose fit"
+  - Category: bottom, Name: baggy light wash blue denim jeans, Query: "unisex light blue baggy denim jeans wide leg"
+  - Category: footwear, Name: chunky white sneakers, Query: "casual chunky white sneakers for men women"
+
+Upload ID: cbd908fa-1d3d-4330-813f-79e71c132af9
+Created At: 2026-08-07T23:21:15.601699+00:00
+Storage Path: 850430f7-c48b-4fe0-b78a-933e809840f9/63cbdbe8-2a18-47a4-ad68-85949e6c81e6.png
+Processing time: 1549 ms
+Detected items (3):
+  - Category: top, Name: oversized solid white cotton t-shirt, Query: "men oversized white t-shirt cotton loose fit"
+  - Category: bottom, Name: baggy light wash blue denim jeans, Query: "unisex light blue baggy denim jeans wide leg"
+  - Category: footwear, Name: chunky white sneakers, Query: "casual chunky white sneakers for men women"
