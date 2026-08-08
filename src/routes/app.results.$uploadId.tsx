@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ChevronLeft, Copy, Check, Trash2, Edit2, Info, Sparkles, RefreshCw } from "lucide-react";
+import { ChevronLeft, Copy, Check, Trash2, Edit2, Sparkles, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { getStoredPhone, logFunnel } from "@/lib/funnel";
 import { toast } from "sonner";
@@ -40,8 +40,6 @@ interface CommissionRate {
   category: string;
   rate_percent: number;
 }
-
-const AVERAGE_ORDER_VALUE = 1500; // Rs 1500 average order assumption
 
 function ResultsPage() {
   const { uploadId } = Route.useParams();
@@ -452,7 +450,7 @@ function ResultsPage() {
                       Search matches
                     </span>
                     <div className="flex items-center gap-1 mt-1 group">
-                      <span className="text-xs text-foreground truncate max-w-[150px] sm:max-w-[220px]">
+                      <span className="text-xs text-foreground break-words">
                         "{item.search_query}"
                       </span>
                     </div>
@@ -487,13 +485,6 @@ function ResultsPage() {
                     <Sparkles className="h-3.5 w-3.5" />
                     <span>
                       Est. commission: <strong className="money font-bold">Up to 10%</strong>
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground group relative cursor-help">
-                    <Info className="h-3 w-3" />
-                    <span>AOV ₹{AVERAGE_ORDER_VALUE}</span>
-                    <span className="absolute bottom-full right-0 mb-1 hidden group-hover:block bg-ink text-white p-2 rounded text-[9px] w-48 leading-relaxed shadow-lg z-10">
-                      Based on up to 10% commission rate of a ₹{AVERAGE_ORDER_VALUE} average order value on Amazon India.
                     </span>
                   </div>
                 </div>
